@@ -1,35 +1,30 @@
 ---
 theme: default
-title: "{{subject}}"
-author: "{{name}}"
-date: "{{date}}"
+title: "My Presentation"
+subject: "Presentation Subject"
+author: "Your Name"
+date: "01.01.2026"
+company: "Company Name"
 highlighter: shiki
-lineNumbers: false
+lineNumbers: true
 transition: slide-left
 mdc: true
 ---
 
 # {{ $frontmatter.subject }}
 
-{{ $frontmatter.author }} · {{ $frontmatter.company }} · {{ $frontmatter.date }}
+{{ $frontmatter.author }} · {{ $frontmatter.company }}
 
 ---
 
-## Agenda
+## Slide title
 
-- Topic one
-- Topic two
-- Topic three
+Content goes here
 
 ---
-
-## Section Title
-
-Content goes here.
-
+layout: center
 ---
 
-## Thank you
+# Thank you
 
-**{{ $frontmatter.name }}**  
-{{ $frontmatter.company }}
+**{{ $frontmatter.author }}** · {{ $frontmatter.company }}

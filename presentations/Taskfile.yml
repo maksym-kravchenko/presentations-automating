@@ -1,60 +1,37 @@
 version: '3'
 
-vars:
-  SLIDES_DIR: slides
-  OUTPUT_DIR: output
-
 tasks:
 
-  _copy-assets:
-    internal: true
-    cmds:
-      - cmd: powershell -NoProfile -Command "
-          Copy-Item style.css slides/style.css -Force;
-          if (!(Test-Path slides/components)) { New-Item -ItemType Directory slides/components };
-          Copy-Item global-bottom.vue slides/components/GlobalBottom.vue -Force"
-
   new:
-    desc: "Create a new presentation. Usage: task new -- my-talk"
+    desc: "Usage: task new -- my-talk  OR  task new -- subfolder/my-talk"
     cmds:
-      - task: _copy-assets
-      - cmd: powershell -NoProfile -Command "Copy-Item template.md 'slides/{{.CLI_ARGS | trim}}.md'"
-      - cmd: node scripts/inject.js {{.CLI_ARGS | trim}}
+      - cmd: node scripts/new.cjs {{.CLI_ARGS | trim}}
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
 
   inject:
-    desc: "Push config.json values into slide. Usage: task inject -- my-talk"
+    desc: "Usage: task inject -- subfolder/my-talk"
     cmds:
-      - cmd: node scripts/inject.js {{.CLI_ARGS | trim}}
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
 
   watch:
-    desc: "Live preview. Usage: task watch -- my-talk"
+    desc: "Usage: task watch -- subfolder/my-talk"
     cmds:
-      - task: _copy-assets
-      - cmd: node scripts/inject.js {{.CLI_ARGS | trim}}
-      - cmd: slidev {{.SLIDES_DIR}}/{{.CLI_ARGS | trim}}.md
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: pnpm slidev slides/{{.CLI_ARGS | trim}}.md
 
   build:
-    desc: "Build to HTML. Usage: task build -- my-talk"
+    desc: "Usage: task build -- subfolder/my-talk"
     cmds:
-      - task: _copy-assets
-      - cmd: node scripts/inject.js {{.CLI_ARGS | trim}}
-      - cmd: slidev build {{.SLIDES_DIR}}/{{.CLI_ARGS | trim}}.md --out {{.OUTPUT_DIR}}/{{.CLI_ARGS | trim}}
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: pnpm slidev build slides/{{.CLI_ARGS | trim}}.md --out output/{{.CLI_ARGS | trim}}
 
   pdf:
-    desc: "Export to PDF. Usage: task pdf -- my-talk"
+    desc: "Usage: task pdf -- subfolder/my-talk"
     cmds:
-      - task: _copy-assets
-      - cmd: node scripts/inject.js {{.CLI_ARGS | trim}}
-      - cmd: slidev export {{.SLIDES_DIR}}/{{.CLI_ARGS | trim}}.md --output {{.OUTPUT_DIR}}/{{.CLI_ARGS | trim}}.pdf
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: pnpm slidev export slides/{{.CLI_ARGS | trim}}.md --output output/{{.CLI_ARGS | trim}}.pdf
 
   build-all:
     desc: "Build all presentations"
     cmds:
-      - task: _copy-assets
-      - cmd: >
-          powershell -NoProfile -Command "
-          Get-ChildItem {{.SLIDES_DIR}} -Filter *.md | ForEach-Object {
-            $name = $_.BaseName
-            node scripts/inject.js $name
-            slidev build {{.SLIDES_DIR}}/$name.md --out {{.OUTPUT_DIR}}/$name
-          }"
+      - cmd: node scripts/build-all.cjs

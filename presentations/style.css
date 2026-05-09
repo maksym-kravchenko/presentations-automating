@@ -1,66 +1,174 @@
-/* ── Color palette ─────────────────────────────── */
+/* ── Color palette ────────────────────────────────────────────────── */
 :root {
-  --color-bg:        #F0F4FF;   /* slide background   */
-  --color-primary:   #4F46E5;   /* headings, accents  */
-  --color-secondary: #818CF8;   /* sub-headings       */
-  --color-text:      #1E1B4B;   /* body text          */
-  --color-surface:   #FFFFFF;   /* cards, code blocks */
-  --color-muted:     #C7D2FE;   /* borders, dividers  */
+  --c-bg:        #F7F8FC;
+  --c-primary:   #4F46E5;
+  --c-secondary: #818CF8;
+  --c-text:      #1E1B4B;
+  --c-muted:     #C7D2FE;
+  --c-surface:   #FFFFFF;
+  --c-accent:    #E0E7FF;
 }
 
-/* ── Base slide ────────────────────────────────── */
+/* ── Base slide ───────────────────────────────────────────────────── */
 .slidev-layout {
-  background-color: var(--color-bg) !important;
-  color: var(--color-text) !important;
+  background-color: var(--c-bg) !important;
+  color: var(--c-text) !important;
   font-family: 'Inter', 'Segoe UI', sans-serif;
+  padding-top: 3.5rem !important;
+  padding-bottom: 3rem !important;
 }
 
-/* ── Headings ──────────────────────────────────── */
+/* ── Headings ─────────────────────────────────────────────────────── */
 .slidev-layout h1 {
-  color: var(--color-primary);
-  font-size: 2.4rem;
+  color: var(--c-primary);
+  font-size: 2.2rem;
   font-weight: 700;
-  border-bottom: 3px solid var(--color-muted);
-  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--c-muted);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .slidev-layout h2 {
-  color: var(--color-secondary);
-  font-size: 1.8rem;
+  color: var(--c-secondary);
+  font-size: 1.6rem;
   font-weight: 600;
+  margin-bottom: 1rem;
 }
 
 .slidev-layout h3 {
-  color: var(--color-primary);
-  font-size: 1.3rem;
+  color: var(--c-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
-/* ── Code blocks ───────────────────────────────── */
-.slidev-layout pre,
+/* ── Lists ────────────────────────────────────────────────────────── */
+.slidev-layout ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.slidev-layout ul li::before {
+  content: '▸';
+  color: var(--c-secondary);
+  font-weight: bold;
+  margin-right: 0.6rem;
+}
+
+.slidev-layout ol {
+  padding-left: 1.5rem;
+}
+
+.slidev-layout ol li {
+  margin: 0.4rem 0;
+}
+
+/* ── Code ─────────────────────────────────────────────────────────── */
+.slidev-layout pre {
+  background-color: var(--c-surface) !important;
+  border: 1px solid var(--c-muted);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
 .slidev-layout code {
-  background-color: var(--color-surface) !important;
-  border: 1px solid var(--color-muted);
-  border-radius: 8px;
+  background-color: var(--c-accent);
+  color: var(--c-primary);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.9em;
 }
 
-/* ── Links ─────────────────────────────────────── */
-.slidev-layout a {
-  color: var(--color-primary);
-  text-decoration: underline;
+.slidev-layout pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
 }
 
-/* ── Title slide (layout: cover) ───────────────── */
+/* ── Blockquote ───────────────────────────────────────────────────── */
+.slidev-layout blockquote {
+  border-left: 4px solid var(--c-secondary);
+  padding: 0.6rem 1rem;
+  background: var(--c-accent);
+  border-radius: 0 8px 8px 0;
+  color: var(--c-primary);
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+/* ── Tables ───────────────────────────────────────────────────────── */
+.slidev-layout table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.slidev-layout th {
+  background: var(--c-primary);
+  color: white;
+  padding: 0.6rem 1rem;
+  text-align: left;
+}
+
+.slidev-layout td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--c-muted);
+}
+
+.slidev-layout tr:nth-child(even) td {
+  background: var(--c-accent);
+}
+
+/* ── Cover layout ─────────────────────────────────────────────────── */
 .slidev-layout.cover {
-  background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%) !important;
-  color: #FFFFFF !important;
+  background: linear-gradient(135deg, #3730A3 0%, #4F46E5 50%, #818CF8 100%) !important;
+  color: white !important;
+  padding-top: 0 !important;
 }
 
 .slidev-layout.cover h1 {
-  color: #FFFFFF;
-  border-bottom-color: rgba(255,255,255,0.3);
+  color: white !important;
+  border-bottom-color: rgba(255,255,255,0.25) !important;
   font-size: 3rem;
 }
 
-.slidev-layout.cover p {
-  color: rgba(255,255,255,0.85);
+.slidev-layout.cover p,
+.slidev-layout.cover h2 {
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* ── Header / Footer bars ─────────────────────────────────────────── */
+.slide-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--c-primary);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  z-index: 100;
+}
+
+.slide-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--c-accent);
+  border-top: 1px solid var(--c-muted);
+  color: var(--c-primary);
+  font-size: 0.72rem;
+  font-weight: 500;
+  z-index: 100;
 }
