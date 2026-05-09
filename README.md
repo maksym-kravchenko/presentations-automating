@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎯 Presentations-automating
+# 🎯 Presentations-automating - Version 1
 
 ### *Stop making slides by hand. Start shipping ideas.*
 
