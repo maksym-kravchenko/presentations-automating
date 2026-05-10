@@ -31,6 +31,18 @@ tasks:
       - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
       - cmd: pnpm slidev export slides/{{.CLI_ARGS | trim}}.md --output output/{{.CLI_ARGS | trim}}.pdf
 
+  pptx:
+    desc: "Usage: task pptx -- subfolder/my-talk"
+    cmds:
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: pnpm slidev export slides/{{.CLI_ARGS | trim}}.md --format pptx --output output/{{.CLI_ARGS | trim}}.pptx
+
+  pptx-edit:
+    desc: "Export to editable PPTX. Usage: task pptx-edit -- subfolder/my-talk"
+    cmds:
+      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: pandoc slides/{{.CLI_ARGS | trim}}.md --reference-doc=template.pptx -o output/{{.CLI_ARGS | trim}}.pptx
+
   build-all:
     desc: "Build all presentations"
     cmds:
