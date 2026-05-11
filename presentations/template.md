@@ -11,9 +11,9 @@ transition: slide-left
 mdc: true
 ---
 
-# {{ $frontmatter.subject }}
+# {{ $slidev.configs.subject }}
 
-{{ $frontmatter.author }} · {{ $frontmatter.company }}
+{{ $slidev.configs.author }} · {{ $slidev.configs.company }}
 
 ---
 
@@ -27,4 +27,4 @@ layout: center
 
 # Thank you
 
-**{{ $frontmatter.author }}** · {{ $frontmatter.company }}
+**{{ $slidev.configs.author }}** · {{ $slidev.configs.company }}

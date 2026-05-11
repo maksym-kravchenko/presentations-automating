@@ -3,13 +3,13 @@ version: '3'
 tasks:
 
   new:
-    desc: "Usage: task new -- my-talk  OR  task new -- subfolder/my-talk"
+    desc: "Create a new slide. Usage: task new -- my-talk  OR  task new -- subfolder/my-talk"
     cmds:
       - cmd: node scripts/new.cjs {{.CLI_ARGS | trim}}
       - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
 
   inject:
-    desc: "Usage: task inject -- subfolder/my-talk"
+    desc: "Inject config.json into frontmatter. Usage: task inject -- subfolder/my-talk"
     cmds:
       - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
 

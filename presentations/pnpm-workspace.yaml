@@ -1,3 +1,5 @@
 allowBuilds:
   playwright-chromium: false
 shamefullyHoist: true
+packages:
+  - 'theme'
