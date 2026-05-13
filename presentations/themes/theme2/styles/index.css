@@ -1,0 +1,242 @@
+/* ── Color palette ────────────────────────────────────────────────── */
+:root {
+  --c-bg:        #F8FAFC;
+  --c-primary:   #dfbd25;
+  --c-secondary: #e7de56;
+  --c-text:      #0F172A;
+  --c-muted:     #b8b194;
+  --c-surface:   #FFFFFF;
+  --c-accent:    #F0FDFA;
+  --c-border:    #CBD5E1;
+  --c-code-bg:   #F1F5F9;
+
+  --header-h:    2.8rem;
+  --footer-h:    2.2rem;
+}
+
+/* ── Base slide ───────────────────────────────────────────────────── */
+.slidev-layout {
+  background-color: var(--c-bg);
+  color: var(--c-text);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: calc(var(--header-h) + 1rem) 3rem calc(var(--footer-h) + 1rem);
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Headings ─────────────────────────────────────────────────────── */
+.slidev-layout h1 {
+  color: var(--c-primary);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  border-bottom: 2px solid var(--c-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.slidev-layout h2 {
+  color: var(--c-secondary);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+
+.slidev-layout h3 {
+  color: var(--c-primary);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+/* ── Paragraph & body ─────────────────────────────────────────────── */
+.slidev-layout p {
+  color: var(--c-text);
+  margin: 0.5rem 0;
+}
+
+/* ── Lists ────────────────────────────────────────────────────────── */
+.slidev-layout ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.slidev-layout ul li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0.4rem 0;
+}
+
+.slidev-layout ul li::before {
+  content: '▸';
+  color: var(--c-secondary);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.slidev-layout ol {
+  padding-left: 1.5rem;
+}
+
+.slidev-layout ol li {
+  margin: 0.4rem 0;
+}
+
+/* ── Code ─────────────────────────────────────────────────────────── */
+.slidev-layout pre {
+  background-color: var(--c-code-bg);
+  border: 1px solid var(--c-border);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  overflow: auto;
+  font-size: 0.88rem;
+}
+
+.slidev-layout code {
+  background-color: var(--c-code-bg);
+  color: var(--c-primary);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.88em;
+  border: 1px solid var(--c-border);
+}
+
+.slidev-layout pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ── Blockquote ───────────────────────────────────────────────────── */
+.slidev-layout blockquote {
+  border-left: 3px solid var(--c-secondary);
+  padding: 0.6rem 1rem;
+  background: var(--c-accent);
+  border-radius: 0 8px 8px 0;
+  color: var(--c-primary);
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+/* ── Tables ───────────────────────────────────────────────────────── */
+.slidev-layout table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.slidev-layout th {
+  background: var(--c-primary);
+  color: white;
+  padding: 0.55rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.slidev-layout td {
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.slidev-layout tr:nth-child(even) td {
+  background: var(--c-accent);
+}
+
+/* ── Cover layout ─────────────────────────────────────────────────── */
+.slidev-layout.cover {
+  background: linear-gradient(135deg, #0F172A 0%, #dfbd25 65%, #e7de56 100%) !important;
+  color: white !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 0 4rem !important;
+}
+
+.slidev-layout.cover h1 {
+  color: white !important;
+  font-size: 3rem !important;
+  border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+  margin-bottom: 1.5rem;
+}
+
+.slidev-layout.cover p,
+.slidev-layout.cover h2 {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 1.1rem;
+}
+
+/* ── Center layout ────────────────────────────────────────────────── */
+.slidev-layout.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ── Header bar (.slide-header used in global-top.vue) ───────────── */
+.slide-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--c-primary);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  z-index: 100;
+}
+
+.slide-header .logo {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: white;
+}
+
+/* ── Footer bar (.slide-footer used in global-bottom.vue) ────────── */
+.slide-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--footer-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-border);
+  color: var(--c-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  z-index: 100;
+}
+
+.slide-footer .page-number {
+  background: var(--c-primary);
+  color: white;
+  border-radius: 4px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+}

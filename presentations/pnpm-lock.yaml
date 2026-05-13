@@ -27,6 +27,8 @@ importers:
 
   themes/theme1: {}
 
+  themes/theme2: {}
+
 packages:
 
   '@antfu/install-pkg@1.1.0':
