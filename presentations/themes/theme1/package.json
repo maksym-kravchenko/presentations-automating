@@ -1,6 +1,6 @@
 {
-  "name": "1-custom-slidev-theme",
-  "version": "1.0.1",
+  "name": "custom-slidev-theme-1",
+  "version": "1.0.2",
   "keywords": ["slidev-theme"],
   "slidev": {
     "colorSchema": "both"
