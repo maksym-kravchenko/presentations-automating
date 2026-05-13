@@ -1,7 +1,6 @@
 ---
 theme: default
 title: "My Presentation"
-subject: "Presentation Subject"
 author: "Your Name"
 date: "01.01.2026"
 company: "Company Name"
@@ -11,7 +10,7 @@ transition: slide-left
 mdc: true
 ---
 
-# {{ $slidev.configs.subject }}
+# {{ $slidev.configs.title }}
 
 {{ $slidev.configs.author }} · {{ $slidev.configs.company }}
 

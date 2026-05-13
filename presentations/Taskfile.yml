@@ -1,49 +1,66 @@
 version: '3'
 
 tasks:
-
   new:
-    desc: "Create a new slide. Usage: task new -- my-talk  OR  task new -- subfolder/my-talk"
+    desc: "Usage: task new NAME=my-talk [THEME=config.js]"
     cmds:
-      - cmd: node scripts/new.cjs {{.CLI_ARGS | trim}}
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: node scripts/new.cjs "{{.NAME}}"
+      - cmd: node scripts/inject.cjs "{{.NAME}}"
+      - cmd: node scripts/inject_theme.cjs "{{.NAME}}" "{{.THEME}}"
 
   inject:
-    desc: "Inject config.json into frontmatter. Usage: task inject -- subfolder/my-talk"
+    desc: "Usage: task inject NAME=my-talk [THEME=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
+      - cmd: node scripts/inject.cjs "{{.NAME}}"
+      - cmd: node scripts/inject_theme.cjs "{{.NAME}}" "{{.THEME}}"
 
   watch:
-    desc: "Usage: task watch -- subfolder/my-talk"
+    desc: "Usage: task watch NAME=my-talk"
     cmds:
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
-      - cmd: pnpm slidev slides/{{.CLI_ARGS | trim}}.md
-
-  build:
-    desc: "Usage: task build -- subfolder/my-talk"
-    cmds:
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
-      - cmd: pnpm slidev build slides/{{.CLI_ARGS | trim}}.md --out output/{{.CLI_ARGS | trim}}
+      - cmd: node scripts/inject.cjs "{{.NAME}}"
+      - cmd: pnpm slidev slides/{{.NAME}}.md
 
   pdf:
-    desc: "Usage: task pdf -- subfolder/my-talk"
+    desc: "Usage: task pdf NAME=my-talk [OPEN=true]"
     cmds:
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
-      - cmd: pnpm slidev export slides/{{.CLI_ARGS | trim}}.md --output output/{{.CLI_ARGS | trim}}.pdf
+      - cmd: node scripts/inject.cjs "{{.NAME}}"
+      - cmd: pnpm slidev export slides/{{.NAME}}.md --format pdf --output output/{{.NAME}}.pdf
+      - cmd: powershell -NoProfile -Command "if ('{{.OPEN}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.NAME}}.pdf') }"
 
   pptx:
-    desc: "Usage: task pptx -- subfolder/my-talk"
+    desc: "Usage: task pptx NAME=my-talk [OPEN=true]"
     cmds:
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
-      - cmd: pnpm slidev export slides/{{.CLI_ARGS | trim}}.md --format pptx --output output/{{.CLI_ARGS | trim}}.pptx
+      - cmd: node scripts/inject.cjs "{{.NAME}}"
+      - cmd: pnpm slidev export slides/{{.NAME}}.md --format pptx --output output/{{.NAME}}.pptx
+      - cmd: powershell -NoProfile -Command "if ('{{.OPEN}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.NAME}}.pptx') }"
 
   pptx-edit:
-    desc: "Export to editable PPTX. Usage: task pptx-edit -- subfolder/my-talk"
+    desc: "Usage: task pptx-edit NAME=my-talk [OPEN=true]"
     cmds:
-      - cmd: node scripts/inject.cjs {{.CLI_ARGS | trim}}
-      - cmd: pandoc slides/{{.CLI_ARGS | trim}}.md --reference-doc=template.pptx -o output/{{.CLI_ARGS | trim}}.pptx
+      - cmd: node scripts/inject.cjs "{{.NAME}}"
+      - cmd: python scripts/md_to_pptx.py slides/{{.NAME}}.md output/{{.NAME}}-editable.pptx
+      - cmd: powershell -NoProfile -Command "if ('{{.OPEN}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.NAME}}-editable.pptx') }"
 
-  build-all:
-    desc: "Build all presentations"
+  list:
+    desc: "List all presentations with their details"
     cmds:
-      - cmd: node scripts/build-all.cjs
+      - cmd: node scripts/list.cjs
+
+  rename:
+    desc: "Usage: task rename FROM=old-name TO=new-name"
+    cmds:
+      - cmd: node scripts/rename.cjs "{{.FROM}}" "{{.TO}}"
+
+  duplicate:
+    desc: "Usage: task duplicate FROM=source TO=new-name"
+    cmds:
+      - cmd: node scripts/duplicate.cjs "{{.FROM}}" "{{.TO}}"
+      - cmd: node scripts/inject.cjs "{{.TO}}"
+
+  setup:
+    desc: "Run once after cloning"
+    cmds:
+      - cmd: pnpm install
+      - cmd: pnpm approve-builds
+      - cmd: pnpm exec playwright install chromium
+      - cmd: pip install python-pptx pyyaml --break-system-packages
