@@ -2,9 +2,9 @@ version: '3'
 
 tasks:
   new:
-    desc: "Usage: task new n=my-talk [t=config.js] [e=true]"
+    desc: "Usage: task new n=my-talk [t=config.js] [doc=true]"
     cmds:
-      - cmd: node scripts/new.cjs "{{.n}}" "{{default "true" .e}}" 
+      - cmd: node scripts/new.cjs "{{.n}}" "{{default "true" .doc}}" 
       - cmd: node scripts/inject.cjs "{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
