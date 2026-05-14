@@ -1,10 +1,10 @@
 /* ── Color palette ────────────────────────────────────────────────── */
 :root {
   --c-bg:        #F8FAFC;
-  --c-primary:   #dfbd25;
-  --c-secondary: #e7de56;
+  --c-primary:   #2B90B6;
+  --c-secondary: #4EC5D4;
   --c-text:      #0F172A;
-  --c-muted:     #b8b194;
+  --c-muted:     #94a4b8;
   --c-surface:   #FFFFFF;
   --c-accent:    #F0FDFA;
   --c-border:    #CBD5E1;
@@ -155,7 +155,7 @@
 
 /* ── Cover layout ─────────────────────────────────────────────────── */
 .slidev-layout.cover {
-  background: linear-gradient(135deg, #0F172A 0%, #dfbd25 65%, #e7de56 100%) !important;
+  background: linear-gradient(135deg, #0F172A 0%,  #146b8c 25%, var(--c-primary) 65%, var(--c-secondary) 100%) !important;
   color: white !important;
   display: flex !important;
   flex-direction: column !important;
@@ -196,8 +196,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  background: var(--c-primary);
-  color: rgba(255, 255, 255, 0.9);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  color: var(--c-secondary);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -206,10 +207,15 @@
 }
 
 .slide-header .logo {
-  font-weight: 700;
+  font-weight: 750;
   font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  color: white;
+  letter-spacing: 0.05em;
+  background-image: linear-gradient(45deg, var(--c-secondary) 25%, var(--c-primary) 65%, #146b8c 100%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
 }
 
 /* ── Footer bar (.slide-footer used in global-bottom.vue) ────────── */

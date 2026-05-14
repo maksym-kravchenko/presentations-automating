@@ -2,6 +2,8 @@ const fs   = require('fs');
 const path = require('path');
 
 const slideName = process.argv[2]?.trim();
+const raw = process.argv[3]?.trim().toLowerCase();
+const slideTemplate = !['false', '0', 'f'].includes(raw);
 
 if (!slideName) {
   console.error('❌  Usage: task new -- my-talk  OR  task new -- subfolder/my-talk');
@@ -11,7 +13,9 @@ if (!slideName) {
 const root     = path.join(__dirname, '..');
 const destPath = path.join(root, 'slides', slideName + '.md');
 const destDir  = path.dirname(destPath);
-const template = path.join(root, 'template.md');
+
+const templateFileName = slideTemplate ? 'template.md' : 'template_empty.md'
+const template = path.join(root, templateFileName);
 
 if (!fs.existsSync(destDir)) {
   fs.mkdirSync(destDir, { recursive: true });
