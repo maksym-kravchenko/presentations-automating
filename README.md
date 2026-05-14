@@ -9,11 +9,12 @@
 
 Write a `.md` file, run one command, get a presentation. No PowerPoint. No dragging boxes around. Just text.
 
-- 🎨 **Consistent styling** — custom local theme applied to every presentation automatically
+- 🎨 **Custom local themes** — multiple themes to choose from, applied per presentation
 - 🗂️ **Organised by subfolders** — `slides/work/q2.md`, `slides/school/math.md`, etc.
 - 🔁 **Live preview** — edit Markdown, see slides update instantly in the browser
-- 📄 **Export to PDF or PPTX** — one command
+- 📄 **Export to PDF or PPTX** — one command, open instantly with `-o`
 - ⚙️ **Config injection** — set your name, company, date once in `config.json`, injected everywhere
+- 📋 **Manage presentations** — list, rename, duplicate from the terminal
 
 ---
 
@@ -56,17 +57,17 @@ cd presentations
 task setup
 ```
 
-This installs all dependencies (including the local theme), approves Playwright build scripts, and installs the Chromium browser used for PDF/PPTX export.
+This installs all dependencies (including local themes), approves Playwright build scripts, and installs the Chromium browser used for PDF/PPTX export.
 
 ---
 
 ## ⚙️ Configuration
 
-Edit `config.json` in the project root before creating a new presentation:
+Edit `config.json` in the project root. These values are automatically injected into every new presentation:
 
 ```json
 {
-  "theme": "1-slidev-theme-mine",
+  "theme": "my-theme-name",
   "author": "Your Name",
   "date": "01.01.2026",
   "subject": "Presentation Subject",
@@ -74,9 +75,8 @@ Edit `config.json` in the project root before creating a new presentation:
 }
 ```
 
-These values are automatically injected into every slide's frontmatter and shown in the header and footer.
-
-> ⚠️ Do not remove `"theme": "slidev-theme-mine"` — this wires up the custom styling.
+- **`theme`** — default theme used when no `t=` is passed to `task new`
+- All other fields appear in the header, footer, cover slide, and thank-you slide automatically
 
 ---
 
@@ -84,58 +84,86 @@ These values are automatically injected into every slide's frontmatter and shown
 
 ```
 presentations/
-├── Taskfile.yml          ← all commands live here
-├── config.json           ← your name, date, subject, company
-├── template.md           ← base template for new presentations
-├── template.pptx         ← reference template for pptx-edit command
+├── Taskfile.yml            ← all commands live here
+├── config.json             ← your name, date, subject, company, default theme
+├── template.md             ← base template for new presentations (with examples)
+├── template_empty.md       ← minimal blank template
 ├── package.json
-├── pnpm-workspace.yaml   ← registers theme/ as a local package
+├── pnpm-workspace.yaml     ← registers all themes/ as local packages
 │
-├── theme/                ← custom Slidev theme (local npm package)
-│   ├── package.json      ← declares name: slidev-theme-mine
-│   ├── global-top.vue    ← header shown on every slide
-│   ├── global-bottom.vue ← footer + pagination on every slide
-│   └── styles/
-│       └── index.css     ← all slide styling lives here
+├── themes/                 ← your custom Slidev themes
+│   ├── emerald-theme/
+│   │   ├── package.json    ← declares name
+│   │   ├── global-top.vue
+│   │   ├── global-bottom.vue
+│   │   └── styles/
+│   │       └── index.css
+│   └── lightblue-theme/
+│       ├── package.json
+│       ├── global-top.vue
+│       ├── global-bottom.vue
+│       └── styles/
+│           └── index.css
 │
-├── slides/               ← your .md source files
-│   ├── my-talk.md        ← flat file
-│   └── react/            ← or organised in subfolders
+├── slides/                 ← your .md source files
+│   ├── my-talk.md
+│   └── react/
 │       └── hooks.md
 │
-├── output/               ← built files land here (gitignored)
-│   └── react/
-│       └── hooks.pdf
+├── output/                 ← built files land here (gitignored)
 │
-└── scripts/              ← internal Node scripts (don't edit)
+└── scripts/                ← internal Node scripts
     ├── new.cjs
     ├── inject.cjs
-    └── build-all.cjs
+    ├── inject_theme.cjs
+    ├── list.cjs
+    ├── rename.cjs
+    └── duplicate.cjs
 ```
 
 ---
 
 ## 🛠️ Commands
 
+All commands use short single-letter parameters — no long flags to remember.
+
+| Parameter | Meaning | Example |
+|---|---|---|
+| `n=` | presentation name / path | `n=react/hooks` |
+| `t=` | theme name | `t=custom-slidev-theme-1` |
+| `o=true` | open file after export | `o=true` |
+| `doc=false` | skip documentation template | `doc=false` |
+| `s=` | source (for rename/duplicate) | `s=old-name` |
+| `to=` | to (for rename/duplicate) | `to=new-name` |
+
+---
+
 ### Create a new presentation
 
 ```powershell
-task new -- my-talk
-task new -- subfolder/my-talk
+task new n=my-talk
+task new n=subfolder/my-talk
+task new n=my-talk t=custom-slidev-theme-1
+task new n=my-talk doc=false
+task new n=my-talk t=custom-slidev-theme-1 doc=false
 ```
 
-Copies `template.md` to `slides/my-talk.md` (creating subfolders as needed) and injects your `config.json` values.
+- Creates `slides/my-talk.md` from `template.md` (with usage examples)
+- Pass `doc=false` (or `doc=0` / `doc=f`) to use `template_empty.md` instead — a clean blank slate with no documentation
+- Pass `t=theme-name` to override the default theme from `config.json`
+- Injects all values from `config.json` automatically
 
 ---
 
 ### Live preview
 
 ```powershell
-task watch -- my-talk
-task watch -- subfolder/my-talk
+task watch n=my-talk
+task watch n=subfolder/my-talk
+task watch n=subfolder/my-talk t=custom-slidev-theme-1
 ```
 
-Opens a browser at `http://localhost:3030`. Edit the `.md` file and slides update instantly.
+Opens a browser at `http://localhost:3030`. Edit the `.md` file and slides update instantly in the browser.
 
 **Useful browser shortcuts while presenting:**
 
@@ -152,79 +180,99 @@ Opens a browser at `http://localhost:3030`. Edit the `.md` file and slides updat
 ### Export to PDF
 
 ```powershell
-task pdf -- my-talk
-task pdf -- subfolder/my-talk
+task pdf n=my-talk
+task pdf n=subfolder/my-talk
+task pdf n=my-talk o=true
+task pdf n=my-talk o=true t=custom-slidev-theme-1
 ```
 
-Output: `output/my-talk.pdf`
+Output: `output/my-talk.pdf`  
+Pass `o=true` to open the file immediately after export.
 
 ---
 
-### Export to PPTX (screenshot-based)
+### Export to PPTX
 
 ```powershell
-task pptx -- my-talk
+task pptx n=my-talk
+task pptx n=my-talk o=true
+task pptx n=my-talk o=true t=custom-slidev-theme-1
 ```
 
-Output: `output/my-talk.pptx`
-
-> Slides are exported as images — layout is pixel-perfect but not editable in PowerPoint.
+Output: `output/my-talk.pptx`  
+Slides are exported as images — layout is pixel-perfect but not editable in PowerPoint.  
+Pass `o=true` to open the file immediately after export.
 
 ---
 
-### Export to editable PPTX (via Pandoc)
+### List all presentations
 
 ```powershell
-task pptx-edit -- my-talk
+task list
 ```
 
-Output: `output/my-talk.pptx`
-
-> Requires [Pandoc](https://pandoc.org) installed: `scoop install pandoc`  
-> Produces real PowerPoint objects — text, bullets, and headings are all editable.  
-> Layout fidelity is limited: Pandoc maps headings mechanically and does not support custom positioning or multi-column slides.
-
-#### 🔬 Better editable PPTX — coming soon
-
-A Python-based exporter using `python-pptx` is in development. It will read the `.md` file and build a fully structured PPTX with proper layouts, fonts, and positioning — giving complete control over the output while keeping it fully editable in PowerPoint. This will replace the Pandoc approach once ready.
-
----
-
-### Build to HTML
-
-```powershell
-task build -- my-talk
-```
-
-Output: `output/my-talk/` — a self-contained HTML presentation you can host or share.
-
----
-
-### Build all presentations
-
-```powershell
-task build-all
-```
-
-Builds every `.md` file in `slides/` and all subfolders.
+Prints a table of all presentations with their subject, author, date, theme, and which exports already exist.
 
 ---
 
 ### Re-inject config
 
-If you change `config.json` while watch is running, open a second terminal and run:
+If you update `config.json` while `task watch` is running, open a second terminal and run:
 
 ```powershell
-task inject -- my-talk
+task inject n=my-talk
+task inject n=my-talk t=custom-slidev-theme-1
 ```
 
 The browser will hot-reload automatically.
 
 ---
 
-## 🎨 Customising the theme
+### Rename a presentation
 
-The theme lives in `theme/styles/index.css`. Edit the CSS variables at the top to change the look globally:
+```powershell
+task rename s=old-name to=new-name
+task rename s=react/hooks to=react/hooks-v2
+```
+
+Renames the `.md` file and any existing output files (PDF, PPTX, HTML folder) to match.
+
+---
+
+### Duplicate a presentation
+
+```powershell
+task duplicate s=source-talk to=new-talk
+task duplicate s=react/hooks to=vue/hooks
+```
+
+Copies the source `.md` to a new path and injects fresh config values into it.
+
+---
+
+## 🎨 Themes
+
+Themes live in the `themes/` folder. Each is a local Slidev theme — a small npm package registered via `pnpm-workspace.yaml`.
+
+### Switching themes
+
+Set the default in `config.json`:
+
+```json
+{
+  "theme": "custom-slidev-theme-1"
+}
+```
+
+Or override per presentation when creating:
+
+```powershell
+task new n=my-talk t=custom-slidev-theme-2
+```
+
+### Customising a theme
+
+Each theme has its own CSS variables in `themes/your-theme/styles/index.css`:
 
 ```css
 :root {
@@ -232,12 +280,19 @@ The theme lives in `theme/styles/index.css`. Edit the CSS variables at the top t
   --c-primary:   #0F766E;   /* headings, accents */
   --c-secondary: #0D9488;   /* sub-headings      */
   --c-text:      #0F172A;   /* body text         */
+  --c-muted:     #CCFBF1;   /* borders, dividers */
+  --c-accent:    #F0FDFA;   /* subtle backgrounds */
 }
 ```
 
-The header (`global-top.vue`) and footer (`global-bottom.vue`) are also in the `theme/` folder and can be edited to change what is displayed on every slide.
+The header (`global-top.vue`) and footer (`global-bottom.vue`) inside each theme folder control what is shown on every slide. Changes take effect immediately in `task watch` without restarting.
 
-Changes take effect immediately in `task watch` without restarting.
+### Adding a new theme
+
+1. Copy an existing theme folder and rename it
+2. Update `name` in the theme's `package.json` to match the folder name
+3. Run `pnpm install` from the project root to register it
+4. Use it with `t=your-theme-name`
 
 ---
 
@@ -247,7 +302,7 @@ Changes take effect immediately in `task watch` without restarting.
 Run `pnpm setup`, then close and reopen PowerShell completely.
 
 **`task` not found in VS Code terminal**  
-Press `Ctrl+Shift+P` → `Terminal: Select Default Profile` → choose PowerShell. Then close and reopen the terminal.
+Press `Ctrl+Shift+P` → `Terminal: Select Default Profile` → choose PowerShell. Reopen the terminal.
 
 **PDF/PPTX export fails with Playwright error**
 
@@ -257,10 +312,13 @@ pnpm exec playwright install chromium
 ```
 
 **Theme not applying (no styling, no header/footer)**  
-Run `pnpm install` from the project root — this registers the local theme package into `node_modules`. Then restart `task watch`.
+Run `pnpm install` from the project root — this registers all local theme packages. Then restart `task watch`.
 
 **Config values not updating on slides**  
-Run `task inject -- your-talk` in a second terminal while watch is running.
+Run `task inject n=your-talk` in a second terminal while watch is running.
+
+**Slidev tries to install theme from npm and fails**  
+Your theme name in `config.json` or the slide frontmatter doesn't match the folder name in `themes/`. Check that the `name` field in `themes/your-theme/package.json` exactly matches what you have in `config.json`.
 
 ---
 
@@ -272,9 +330,7 @@ Run `task inject -- your-talk` in a second terminal while watch is running.
 | [Go Task](https://taskfile.dev) | Task runner / automation |
 | [pnpm](https://pnpm.io) | Package manager with workspace support |
 | [Playwright](https://playwright.dev) | Headless browser for PDF/PPTX export |
-| [Pandoc](https://pandoc.org) | Markdown → editable PPTX (current) |
-| [python-pptx](https://python-pptx.readthedocs.io) | Markdown → editable PPTX (in development) |
-| Node.js | Config injection scripts |
+| Node.js | Config injection and management scripts |
 
 ---
 
