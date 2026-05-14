@@ -5,7 +5,7 @@ const fromName = process.argv[2]?.trim();
 const toName   = process.argv[3]?.trim();
 
 if (!fromName || !toName) {
-  console.error('❌  Usage: task rename FROM=old-name TO=new-name');
+  console.error('❌  Usage: task rename s=old-name to=new-name');
   process.exit(1);
 }
 

@@ -43,15 +43,15 @@ tasks:
       - cmd: node scripts/list.cjs
 
   rename:
-    desc: "Usage: task rename FROM=old-name TO=new-name"
+    desc: "Usage: task rename s=old-name to=new-name"
     cmds:
-      - cmd: node scripts/rename.cjs "{{.FROM}}" "{{.TO}}"
+      - cmd: node scripts/rename.cjs "{{.s}}" "{{.to}}"
 
   duplicate:
-    desc: "Usage: task duplicate FROM=source TO=new-name"
+    desc: "Usage: task duplicate s=source to=new-name"
     cmds:
-      - cmd: node scripts/duplicate.cjs "{{.FROM}}" "{{.TO}}"
-      - cmd: node scripts/inject.cjs "{{.TO}}"
+      - cmd: node scripts/duplicate.cjs "{{.s}}" "{{.to}}"
+      - cmd: node scripts/inject.cjs "{{.to}}"
 
   setup:
     desc: "Run once after cloning"
@@ -59,4 +59,3 @@ tasks:
       - cmd: pnpm install
       - cmd: pnpm approve-builds
       - cmd: pnpm exec playwright install chromium
-      - cmd: pip install python-pptx pyyaml --break-system-packages

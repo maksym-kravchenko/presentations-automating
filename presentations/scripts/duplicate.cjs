@@ -5,7 +5,7 @@ const fromName = process.argv[2]?.trim();
 const toName   = process.argv[3]?.trim();
 
 if (!fromName || !toName) {
-  console.error('❌  Usage: task duplicate FROM=source TO=new-name');
+  console.error('❌  Usage: task duplicate s=source to=new-name');
   process.exit(1);
 }
 
