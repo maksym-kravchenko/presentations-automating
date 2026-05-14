@@ -2,44 +2,40 @@ version: '3'
 
 tasks:
   new:
-    desc: "Usage: task new NAME=my-talk [THEME=config.js]"
+    desc: "Usage: task new n=my-talk [t=config.js]"
     cmds:
-      - cmd: node scripts/new.cjs "{{.NAME}}"
-      - cmd: node scripts/inject.cjs "{{.NAME}}"
-      - cmd: node scripts/inject_theme.cjs "{{.NAME}}" "{{.THEME}}"
+      - cmd: node scripts/new.cjs "{{.n}}"
+      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
   inject:
-    desc: "Usage: task inject NAME=my-talk [THEME=config.js]"
+    desc: "Usage: task inject n=my-talk [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.NAME}}"
-      - cmd: node scripts/inject_theme.cjs "{{.NAME}}" "{{.THEME}}"
+      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
   watch:
-    desc: "Usage: task watch NAME=my-talk"
+    desc: "Usage: task watch n=my-talk [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.NAME}}"
-      - cmd: pnpm slidev slides/{{.NAME}}.md
+      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
+      - cmd: pnpm slidev slides/{{.n}}.md
 
   pdf:
-    desc: "Usage: task pdf NAME=my-talk [OPEN=true]"
+    desc: "Usage: task pdf n=my-talk [o=true] [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.NAME}}"
-      - cmd: pnpm slidev export slides/{{.NAME}}.md --format pdf --output output/{{.NAME}}.pdf
-      - cmd: powershell -NoProfile -Command "if ('{{.OPEN}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.NAME}}.pdf') }"
+      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
+      - cmd: pnpm slidev export slides/{{.n}}.md --format pdf --output output/{{.n}}.pdf
+      - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pdf') }"
 
   pptx:
-    desc: "Usage: task pptx NAME=my-talk [OPEN=true]"
+    desc: "Usage: task pptx n=my-talk [o=true] [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.NAME}}"
-      - cmd: pnpm slidev export slides/{{.NAME}}.md --format pptx --output output/{{.NAME}}.pptx
-      - cmd: powershell -NoProfile -Command "if ('{{.OPEN}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.NAME}}.pptx') }"
-
-  pptx-edit:
-    desc: "Usage: task pptx-edit NAME=my-talk [OPEN=true]"
-    cmds:
-      - cmd: node scripts/inject.cjs "{{.NAME}}"
-      - cmd: python scripts/md_to_pptx.py slides/{{.NAME}}.md output/{{.NAME}}-editable.pptx
-      - cmd: powershell -NoProfile -Command "if ('{{.OPEN}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.NAME}}-editable.pptx') }"
+      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
+      - cmd: pnpm slidev export slides/{{.n}}.md --format pptx --output output/{{.n}}.pptx
+      - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pptx') }"
 
   list:
     desc: "List all presentations with their details"
