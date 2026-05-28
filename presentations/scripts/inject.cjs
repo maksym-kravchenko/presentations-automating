@@ -10,7 +10,7 @@ if (!slideName) {
 
 const root      = path.join(__dirname, '..');
 const config    = JSON.parse(fs.readFileSync(path.join(root, 'config.json'), 'utf8'));
-const slidePath = path.join(root, 'slides', slideName + '.md');
+const slidePath = path.join(root, slideName + '.md');
 
 if (!fs.existsSync(slidePath)) {
   console.error(`❌  File not found: ${slidePath}`);
