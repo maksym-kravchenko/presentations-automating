@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <title>{{title}}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 22mm 22mm 28mm 22mm;
+    }
+
+    @page :first {
+      margin: 0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      font-size: 11pt;
+      line-height: 1.75;
+      color: #1E293B;
+      background: #ffffff;
+    }
+
+    .cover {
+      width: 210mm;
+      height: 297mm;
+      background: #1E1B4B;
+      display: flex;
+      flex-direction: column;
+      page-break-after: always;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cover-stripe {
+      height: 6mm;
+      background: #4F46E5;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .cover-stripe-bottom {
+      height: 4mm;
+      background: #818CF8;
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      bottom: -40mm;
+      right: -30mm;
+      width: 120mm;
+      height: 120mm;
+      border-radius: 50%;
+      background: rgba(79, 70, 229, 0.12);
+    }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      top: 20mm;
+      left: -15mm;
+      width: 55mm;
+      height: 55mm;
+      border-radius: 50%;
+      background: rgba(129, 140, 248, 0.08);
+    }
+
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 18mm 20mm 12mm 20mm;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-company {
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #818CF8;
+      margin-bottom: 10mm;
+    }
+
+    .cover-title {
+      font-size: 32pt;
+      font-weight: 800;
+      color: #F1F5F9;
+      line-height: 1.15;
+      margin-bottom: 6mm;
+    }
+
+    .cover-subject {
+      font-size: 13pt;
+      color: #94A3B8;
+      margin-bottom: 20mm;
+      font-weight: 400;
+    }
+
+    .cover-divider {
+      width: 18mm;
+      height: 3px;
+      background: #4F46E5;
+      border-radius: 2px;
+      margin-bottom: 10mm;
+    }
+
+    .cover-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 3mm;
+    }
+
+    .cover-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+    }
+
+    .cover-meta-label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4F46E5;
+      min-width: 15mm;
+    }
+
+    .cover-meta-value {
+      font-size: 10pt;
+      color: #CBD5E1;
+    }
+
+    .content {
+      padding-top: 2mm;
+    }
+
+    h1 {
+      font-size: 20pt;
+      font-weight: 700;
+      color: #1E293B;
+      margin-top: 14mm;
+      margin-bottom: 5mm;
+      padding-bottom: 3mm;
+      border-bottom: 2px solid #4F46E5;
+      page-break-after: avoid;
+    }
+
+    h1:first-of-type { margin-top: 4mm; }
+
+    h2 {
+      font-size: 14pt;
+      font-weight: 600;
+      color: #4F46E5;
+      margin-top: 8mm;
+      margin-bottom: 3mm;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 5mm;
+      margin-bottom: 2mm;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #64748B;
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+    }
+
+    p {
+      margin-bottom: 3.5mm;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    ul, ol {
+      margin: 2mm 0 4mm 6mm;
+      padding-left: 5mm;
+    }
+
+    li {
+      margin-bottom: 1.5mm;
+      line-height: 1.6;
+    }
+
+    ul li::marker { color: #4F46E5; }
+    ol li::marker { color: #4F46E5; font-weight: 600; }
+
+    code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 9.5pt;
+      background: #F1F5F9;
+      color: #BE185D;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-left: 4px solid #4F46E5;
+      border-radius: 0 5px 5px 0;
+      padding: 4mm 5mm;
+      margin: 4mm 0;
+      page-break-inside: avoid;
+    }
+
+    pre code {
+      background: none;
+      color: #1E293B;
+      padding: 0;
+      font-size: 9pt;
+      line-height: 1.6;
+    }
+
+    blockquote {
+      border-left: 4px solid #818CF8;
+      background: #F0F4FF;
+      padding: 3mm 5mm;
+      margin: 4mm 0;
+      border-radius: 0 5px 5px 0;
+      color: #334155;
+      font-style: italic;
+    }
+
+    blockquote p { margin: 0; text-align: left; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4mm 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+
+    th {
+      background: #4F46E5;
+      color: white;
+      padding: 2.5mm 4mm;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    th:first-child { border-radius: 4px 0 0 0; }
+    th:last-child  { border-radius: 0 4px 0 0; }
+
+    td {
+      padding: 2.5mm 4mm;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    tr:nth-child(even) td { background: #F8FAFC; }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin: 4mm 0;
+      border: 1px solid #E2E8F0;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #E2E8F0;
+      margin: 6mm 0;
+    }
+
+    a { color: #4F46E5; text-decoration: underline; }
+
+    strong { color: #1E293B; font-weight: 700; }
+    em     { color: #475569; }
+
+    h1, h2, h3     { page-break-after: avoid; }
+    pre, table, blockquote, img { page-break-inside: avoid; }
+  </style>
+</head>
+<body>
+
+  <div class="cover">
+    <div class="cover-stripe"></div>
+    <div class="cover-body">
+      {{#company}}<div class="cover-company">{{company}}</div>{{/company}}
+      <div class="cover-title">{{title}}</div>
+      {{#showSubject}}<div class="cover-subject">{{subject}}</div>{{/showSubject}}
+      <div class="cover-divider"></div>
+      <div class="cover-meta">
+        {{#author}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Autor</span>
+          <span class="cover-meta-value">{{author}}</span>
+        </div>
+        {{/author}}
+        {{#date}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Datum</span>
+          <span class="cover-meta-value">{{date}}</span>
+        </div>
+        {{/date}}
+      </div>
+    </div>
+    <div class="cover-stripe-bottom"></div>
+  </div>
+
+  <div class="content">
+    {{contentHtml}}
+  </div>
+
+</body>
+</html>

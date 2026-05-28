@@ -5,26 +5,26 @@ tasks:
     desc: "Usage: task new n=my-talk [t=config.js] [doc=true]"
     cmds:
       - cmd: node scripts/new.cjs "{{.n}}" "{{default "true" .doc}}" 
-      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
   inject:
     desc: "Usage: task inject n=my-talk [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
   watch:
     desc: "Usage: task watch n=my-talk [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
       - cmd: pnpm slidev slides/{{.n}}.md
 
-  pdf:
-    desc: "Usage: task pdf n=my-talk [o=true] [t=config.js]"
+  s-pdf:
+    desc: "Usage: task s-pdf n=my-talk [o=true] [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
       - cmd: pnpm slidev export slides/{{.n}}.md --format pdf --output output/{{.n}}.pdf
       - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pdf') }"
@@ -32,10 +32,17 @@ tasks:
   pptx:
     desc: "Usage: task pptx n=my-talk [o=true] [t=config.js]"
     cmds:
-      - cmd: node scripts/inject.cjs "{{.n}}"
+      - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
       - cmd: pnpm slidev export slides/{{.n}}.md --format pptx --output output/{{.n}}.pptx
       - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pptx') }"
+
+  md-pdf:
+    desc: "Export markdown to document PDF. Usage: task md-pdf n=my-doc [t=default] [o=true]"
+    cmds:
+      - cmd: node scripts/inject.cjs "pdf_bases/{{.n}}"
+      - cmd: node scripts/doc.cjs pdf_bases/{{.n}}.md output/{{.n}}.pdf {{default "default" .t}}
+      - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pdf') }"
 
   list:
     desc: "List all presentations with their details"
@@ -51,7 +58,7 @@ tasks:
     desc: "Usage: task duplicate s=source to=new-name"
     cmds:
       - cmd: node scripts/duplicate.cjs "{{.s}}" "{{.to}}"
-      - cmd: node scripts/inject.cjs "{{.to}}"
+      - cmd: node scripts/inject.cjs "slides/{{.to}}"
 
   setup:
     desc: "Run once after cloning"

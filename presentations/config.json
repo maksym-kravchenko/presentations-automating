@@ -1,7 +1,8 @@
 {
   "theme": "custom-slidev-theme-2",
   "author": "Maksym Kravchenko",
-  "date": "13.05.2026",
-  "company": "Company Name",
-  "title" :  "Title of the Presentation"
+  "date": "28.05.2026",
+  "company": "M122: Abläufe mit Script/Makros automatisieren",
+  "title" :  "PC Healthcheck Dashboard",
+  "subject": "Projekt-Logbuch"
 }

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <title>{{title}}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 22mm 22mm 28mm 22mm;
+    }
+
+    @page :first {
+      margin: 0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
+      font-size: 11pt;
+      line-height: 1.7;
+      color: #0F172A;
+      background: #ffffff;
+    }
+
+    .cover {
+      width: 210mm;
+      height: 297mm;
+      background: #F8FAFC;
+      display: flex;
+      page-break-after: always;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cover-sidebar {
+      width: 55mm;
+      background: linear-gradient(180deg, #0F766E 0%, #115E59 100%);
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22mm 12mm;
+    }
+
+    .cover-mark {
+      width: 18mm;
+      height: 18mm;
+      background: #5EEAD4;
+      border-radius: 2mm;
+      position: relative;
+    }
+
+    .cover-mark::after {
+      content: '';
+      position: absolute;
+      bottom: -6mm;
+      right: -6mm;
+      width: 18mm;
+      height: 18mm;
+      background: #14B8A6;
+      border-radius: 2mm;
+      opacity: 0.85;
+      z-index: -1;
+    }
+
+    .cover-sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 2mm;
+    }
+
+    .cover-sidebar-line {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.25);
+      margin-bottom: 4mm;
+    }
+
+    .cover-sidebar-label {
+      font-size: 7pt;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #5EEAD4;
+    }
+
+    .cover-sidebar-text {
+      font-size: 9pt;
+      color: #CCFBF1;
+      line-height: 1.5;
+    }
+
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 24mm 22mm;
+      position: relative;
+    }
+
+    .cover-body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 35mm 35mm 0;
+      border-color: transparent #0F766E transparent transparent;
+      opacity: 0.08;
+    }
+
+    .cover-company {
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #0F766E;
+      margin-bottom: 14mm;
+    }
+
+    .cover-title {
+      font-size: 34pt;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.1;
+      margin-bottom: 6mm;
+      letter-spacing: -0.01em;
+    }
+
+    .cover-subject {
+      font-size: 13pt;
+      color: #475569;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 18mm;
+      max-width: 110mm;
+    }
+
+    .cover-accent-bar {
+      width: 30mm;
+      height: 4px;
+      background: #14B8A6;
+      margin-bottom: 12mm;
+    }
+
+    .cover-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4mm;
+    }
+
+    .cover-meta-row {
+      display: flex;
+      align-items: baseline;
+      gap: 5mm;
+    }
+
+    .cover-meta-label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #0F766E;
+      min-width: 18mm;
+    }
+
+    .cover-meta-value {
+      font-size: 10.5pt;
+      color: #1E293B;
+      font-weight: 500;
+    }
+
+    .content {
+      padding-top: 2mm;
+    }
+
+    h1 {
+      font-size: 22pt;
+      font-weight: 700;
+      color: #0F172A;
+      letter-spacing: -0.01em;
+      margin-top: 14mm;
+      margin-bottom: 6mm;
+      padding-bottom: 4mm;
+      position: relative;
+      page-break-after: avoid;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 22mm;
+      height: 4px;
+      background: #14B8A6;
+      margin-top: 4mm;
+    }
+
+    h1:first-of-type { margin-top: 4mm; }
+
+    h2 {
+      font-size: 13pt;
+      font-weight: 600;
+      color: #0F766E;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 9mm;
+      margin-bottom: 3mm;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 6mm;
+      margin-bottom: 2mm;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #64748B;
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+    }
+
+    p {
+      margin-bottom: 3.5mm;
+      text-align: left;
+      hyphens: auto;
+    }
+
+    ul, ol {
+      margin: 2mm 0 4mm 6mm;
+      padding-left: 5mm;
+    }
+
+    li {
+      margin-bottom: 1.5mm;
+      line-height: 1.65;
+    }
+
+    ul li::marker { color: #14B8A6; }
+    ol li::marker { color: #0F766E; font-weight: 700; }
+
+    code {
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      font-size: 9.5pt;
+      background: #ECFDF5;
+      color: #0F766E;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    pre {
+      background: #0F172A;
+      border-radius: 4px;
+      padding: 5mm 6mm;
+      margin: 4mm 0;
+      page-break-inside: avoid;
+      position: relative;
+      overflow: hidden;
+    }
+
+    pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3mm;
+      height: 100%;
+      background: #14B8A6;
+    }
+
+    pre code {
+      background: none;
+      color: #E2E8F0;
+      padding: 0;
+      font-size: 9pt;
+      line-height: 1.65;
+    }
+
+    blockquote {
+      border-left: 3px solid #14B8A6;
+      background: #F0FDFA;
+      padding: 4mm 6mm;
+      margin: 4mm 0;
+      border-radius: 0 4px 4px 0;
+      color: #134E4A;
+    }
+
+    blockquote p { margin: 0; text-align: left; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4mm 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+
+    th {
+      background: #0F766E;
+      color: white;
+      padding: 3mm 4mm;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 3mm 4mm;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    tr:nth-child(even) td { background: #F8FAFC; }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin: 4mm 0;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #CBD5E1;
+      margin: 6mm 0;
+    }
+
+    a { color: #0F766E; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+    strong { color: #0F172A; font-weight: 700; }
+    em     { color: #475569; font-style: italic; }
+
+    h1, h2, h3 { page-break-after: avoid; }
+    pre, table, blockquote, img { page-break-inside: avoid; }
+  </style>
+</head>
+<body>
+
+  <div class="cover">
+    <div class="cover-sidebar">
+      <div class="cover-sidebar-bottom">
+        <div class="cover-sidebar-line"></div>
+        <div class="cover-sidebar-label">Dokument</div>
+        <div class="cover-sidebar-text">{{title}}</div>
+      </div>
+       <div class="cover-sidebar-bottom">
+        <div class="cover-sidebar-line"></div>
+        <div class="cover-sidebar-label">{{company}}</div>
+        <div class="cover-sidebar-text">{{author}}</div>
+      </div>
+    </div>
+    <div class="cover-body">
+      {{#company}}<div class="cover-company">{{company}}</div>{{/company}}
+      <div class="cover-title">{{title}}</div>
+      {{#showSubject}}<div class="cover-subject">{{subject}}</div>{{/showSubject}}
+      <div class="cover-accent-bar"></div>
+      <div class="cover-meta">
+        {{#author}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Autor</span>
+          <span class="cover-meta-value">{{author}}</span>
+        </div>
+        {{/author}}
+        {{#date}}
+        <div class="cover-meta-row">
+          <span class="cover-meta-label">Datum</span>
+          <span class="cover-meta-value">{{date}}</span>
+        </div>
+        {{/date}}
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    {{contentHtml}}
+  </div>
+
+</body>
+</html>
