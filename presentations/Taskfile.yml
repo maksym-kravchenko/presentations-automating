@@ -1,40 +1,47 @@
 version: '3'
 
 tasks:
-  new:
-    desc: "Usage: task new n=my-talk [t=config.js] [doc=true]"
+  setup:
+    desc: "Run once after cloning"
     cmds:
-      - cmd: node scripts/new.cjs "{{.n}}" "{{default "true" .doc}}" 
+      - powershell -NoProfile -Command "pnpm install"
+      - powershell -NoProfile -Command "pnpm approve-builds"  
+      - powershell -NoProfile -Command "pnpm exec playwright install chromium"
+
+  new:
+    desc: "Usage: task new n=my-talk [t=theme] [doc=true]"
+    cmds:
+      - cmd: node scripts/new.cjs "{{.n}}" "{{default "true" .doc}}"
       - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
   inject:
-    desc: "Usage: task inject n=my-talk [t=config.js]"
+    desc: "Usage: task inject n=my-talk [t=theme]"
     cmds:
       - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
 
   watch:
-    desc: "Usage: task watch n=my-talk [t=config.js]"
+    desc: "Usage: task watch n=my-talk"
     cmds:
       - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
-      - cmd: pnpm slidev slides/{{.n}}.md
+      - cmd: powershell -NoProfile -Command "pnpm slidev slides/{{.n}}.md"
 
   s-pdf:
-    desc: "Usage: task s-pdf n=my-talk [o=true] [t=config.js]"
+    desc: "Usage: task s-pdf n=my-talk [o=true]"
     cmds:
       - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
-      - cmd: pnpm slidev export slides/{{.n}}.md --format pdf --output output/{{.n}}.pdf
+      - cmd: powershell -NoProfile -Command "pnpm slidev export slides/{{.n}}.md --format pdf --output output/{{.n}}.pdf"
       - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pdf') }"
 
   pptx:
-    desc: "Usage: task pptx n=my-talk [o=true] [t=config.js]"
+    desc: "Usage: task pptx n=my-talk [o=true]"
     cmds:
       - cmd: node scripts/inject.cjs "slides/{{.n}}"
       - cmd: node scripts/inject_theme.cjs "{{.n}}" "{{.t}}"
-      - cmd: pnpm slidev export slides/{{.n}}.md --format pptx --output output/{{.n}}.pptx
+      - cmd: powershell -NoProfile -Command "pnpm slidev export slides/{{.n}}.md --format pptx --output output/{{.n}}.pptx"
       - cmd: powershell -NoProfile -Command "if ('{{.o}}' -eq 'true') { Start-Process (Resolve-Path 'output/{{.n}}.pptx') }"
 
   md-pdf:
@@ -59,10 +66,3 @@ tasks:
     cmds:
       - cmd: node scripts/duplicate.cjs "{{.s}}" "{{.to}}"
       - cmd: node scripts/inject.cjs "slides/{{.to}}"
-
-  setup:
-    desc: "Run once after cloning"
-    cmds:
-      - cmd: pnpm install
-      - cmd: pnpm approve-builds
-      - cmd: pnpm exec playwright install chromium
