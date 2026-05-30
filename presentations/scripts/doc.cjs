@@ -53,6 +53,19 @@ function renderTemplate(tpl, data) {
     .replace(/{{(\w+)}}/g, (_, key) => (data[key] != null ? String(data[key]) : ''));
 }
 
+function makeSlugger() {
+  const seen = new Map();
+  return (text) => {
+    const base = text
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\s-]/gu, '') // drop punctuation, keep letters/digits/umlauts
+      .replace(/ /g, '-');
+    const count = seen.get(base) || 0;
+    seen.set(base, count + 1);
+    return count ? `${base}-${count}` : base;
+  };
+}
+
 (async () => {
   const raw          = fs.readFileSync(mdPath, 'utf8');
   const template     = fs.readFileSync(themePath, 'utf8');
@@ -64,8 +77,24 @@ function renderTemplate(tpl, data) {
   const company = fm.company || '';
   const subject = fm.subject || '';
 
+  // A thematic break (---) directly before a heading starts that heading on a
+  // new page. Other --- separators (e.g. before a plain paragraph) stay as-is.
+  const paged = body.replace(
+    /^---[ \t]*$\n+(?=#{1,6}[ \t])/gm,
+    '<div style="page-break-before: always; break-before: page;"></div>\n\n'
+  );
+
   marked.setOptions({ gfm: true, breaks: false });
-  const contentHtml = marked.parse(body);
+  const slug = makeSlugger();
+  marked.use({
+    renderer: {
+      heading(token) {
+        const inner = this.parser.parseInline(token.tokens);
+        return `<h${token.depth} id="${slug(token.text)}">${inner}</h${token.depth}>\n`;
+      },
+    },
+  });
+  const contentHtml = marked.parse(paged);
 
   const html = renderTemplate(template, {
     title,
