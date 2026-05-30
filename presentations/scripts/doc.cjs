@@ -94,7 +94,31 @@ function makeSlugger() {
       },
     },
   });
-  const contentHtml = marked.parse(paged);
+  const mdDir = path.resolve(path.dirname(mdPath));
+  const MIME = {
+    '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+  };
+  // Inline local images as base64 data URIs. page.setContent() loads the HTML
+  // as an about:blank document, and Chromium blocks file:// resource loads from
+  // a non-file origin — so relative or file:// image paths never render.
+  const rawHtml = marked.parse(paged);
+  const contentHtml = rawHtml.replace(
+    /(<img[^>]+src=["'])([^"']+)(["'])/gi,
+    (whole, prefix, src, quote) => {
+      if (/^(https?:|data:)/i.test(src)) return whole; // leave remote/data URIs alone
+      let filePath = src.replace(/^file:\/\/\/?/i, '').replace(/^\/([A-Za-z]:)/, '$1');
+      filePath = decodeURIComponent(filePath);
+      if (!path.isAbsolute(filePath)) filePath = path.join(mdDir, filePath);
+      if (!fs.existsSync(filePath)) {
+        console.warn(`⚠️  Image not found, skipping inline: ${src}`);
+        return whole;
+      }
+      const mime = MIME[path.extname(filePath).toLowerCase()] || 'application/octet-stream';
+      const b64 = fs.readFileSync(filePath).toString('base64');
+      return `${prefix}data:${mime};base64,${b64}${quote}`;
+    }
+  );
 
   const html = renderTemplate(template, {
     title,
@@ -113,7 +137,7 @@ function makeSlugger() {
 
   // A4 viewport so cover dimensions are accurate
   await page.setViewportSize({ width: 794, height: 1123 });
-  await page.setContent(html, { waitUntil: 'domcontentloaded' });
+  await page.setContent(html, { waitUntil: 'networkidle' });
 
   await page.pdf({
     path:            outPath,
